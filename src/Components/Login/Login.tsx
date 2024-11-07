@@ -10,10 +10,24 @@ import { useNavigate } from "react-router-dom";
 // Date:        October 31, 2024
 
 // Logic:
-// This component provides a form where users can enter their credentials.
-// - `onSubmit`: Validates credentials ( "TEST123" - user code and "TEST456"- Password); if correct, logs the user in and redirects to the homepage.
-// - `handleCancel`: Redirects to the homepage without logging in.
-// - Form validation messages are shown if required fields are empty or incorrect credentials are provided.
+// Screen Layout:
+// - Displays a login form with fields for 'User Code' and 'Password'.
+// - Includes submit and cancel buttons wrapped in a 'fieldset'.
+
+// UI Behavior:
+// - Validates form inputs for required fields and displays appropriate error messages.
+// - Redirects to the homepage on successful login or when the cancel button is clicked.
+// - Shows manual validation errors if credentials are incorrect.
+// - Uses 'useLoginContext' to update the login state ('setIsLoggedIn').
+
+// Screen Data:
+// - Captures 'userCode' and 'password' from user input.
+
+
+// Screen Data Validation Rules:
+// - Ensures both 'userCode' and 'password' are filled before submission.
+// - Displays a custom error message for incorrect credentials.
+
 
 export type Inputs = {
   userCode: string;
@@ -58,6 +72,7 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-5 w-75">
       <fieldset className="d-flex flex-column border rounded p-3">
+        <legend>Login:</legend>
         <div className="py-1">
           <label htmlFor={userCodeId} className="px-2">
             User Code:
@@ -89,7 +104,7 @@ const Login = () => {
             </span>
           )}
         </div>
-        
+
         {/* Submit and Cancel Buttons */}
         <div className="d-flex gap-3 mt-3">
           <input type="submit" value="Sign In" className="btn btn-primary" />

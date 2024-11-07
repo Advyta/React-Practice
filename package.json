@@ -13,6 +13,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "bootstrap": "^5.3.3",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
@@ -44,5 +46,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
+    "@types/date-fns": "^2.6.3"
   }
 }
