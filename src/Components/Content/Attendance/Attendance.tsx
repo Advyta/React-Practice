@@ -12,7 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 // Logic:
 // Screen Layout:
-// - Displays attendance records with filtering options such as 'Current Month', 'Given Month', and 'Given Date Range'.
+// - Displays attendance records with filtering options such as 'Current Month', 'Select Month', and 'Select Date Range'.
 // - Contains interactive elements for selecting a month or date range.
 // - The attendance data is listed under this
 

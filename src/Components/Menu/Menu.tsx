@@ -1,7 +1,6 @@
-// Menu.tsx
-import React, { useId } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useId } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 // Project:     Reactjs practice
 // Module:      Company Module
 // Component:   Menu Component
@@ -22,7 +21,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Screen Data Validation Rules:
 // - Verifies if 'route' exists before navigating; defaults to '/' if not provided.
 
-
 type MenuItem = {
   label: string;
   children?: MenuItem[];
@@ -31,64 +29,115 @@ type MenuItem = {
 
 type MenuProps = {
   items: MenuItem[];
+  onExitClick: () => void;
+  isLoggedIn: boolean;
 };
 
-const Menu: React.FC<MenuProps> = ({ items }) => {
+const Menu: React.FC<MenuProps> = ({ items, onExitClick, isLoggedIn }) => {
   const rootId = useId();
   const navigate = useNavigate();
 
   const handleNavigation = (route: string) => {
-    if (route) {
+    if (isLoggedIn && route) {
       navigate(route);
     }
   };
 
-  const renderMenuItems = (items: MenuItem[], level = 0, parentId = rootId) => (
-    <div className="accordion" id={`accordion-${parentId}-${level}`}>
-      {items.map((item, index) => {
-        const itemId = `${parentId}-${level}-${index}`;
-
-        return (
-          <div key={itemId} className="accordion-item">
-            <h2 className="accordion-header" id={`heading-${itemId}`}>
+  const renderMenuItems = (items: MenuItem[], level = 0, parentId = rootId) => {
+    if (level === 0) {
+      // Render level 1 items in a horizontal layout
+      return (
+        <ul className={`nav d-flex ${!isLoggedIn ? "disabled" : ""}`}>
+          {items.map((item, index) => (
+            <li
+              key={`${parentId}-${level}-${index}`}
+              className="nav-item dropdown"
+            >
               {item.children ? (
-                <button
-                  className="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#collapse-${itemId}`}
+                <a
+                  href="#"
+                  className={`nav-link dropdown-toggle ${
+                    !isLoggedIn ? "disabled" : ""
+                  }`}
+                  id={`dropdown-${index}`}
+                  role="button"
+                  data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  aria-controls={`collapse-${itemId}`}
                 >
                   {item.label}
-                </button>
+                </a>
               ) : (
-                // Render as a navigation link if no children
                 <button
-                  className="accordion-button collapsed"
+                  className={`nav-link btn btn-link ${
+                    !isLoggedIn ? "disabled" : ""
+                  }`}
                   onClick={() => handleNavigation(item.route || `/`)}
+                  style={{ cursor: isLoggedIn ? "pointer" : "not-allowed" }}
+                  disabled={!isLoggedIn}
                 >
                   {item.label}
                 </button>
               )}
-            </h2>
-            {item.children && (
-              <div
-                id={`collapse-${itemId}`}
-                className="accordion-collapse collapse"
-                aria-labelledby={`heading-${itemId}`}
-                data-bs-parent={`#accordion-${parentId}-${level}`}
-              >
-                <div className="accordion-body">
-                  {renderMenuItems(item.children, level + 1, itemId)}
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+              {item.children && (
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby={`dropdown-${index}`}
+                >
+                  {renderMenuItems(
+                    item.children,
+                    level + 1,
+                    `${parentId}-${level}-${index}`
+                  )}
+                </ul>
+              )}
+            </li>
+          ))}
+          {/* Add Exit button as a level 1 item */}
+          <li className="nav-item">
+            <button
+              className={`nav-link btn btn-link ${
+                !isLoggedIn ? "disabled" : ""
+              }`}
+              style={{ cursor: isLoggedIn ? "pointer" : "not-allowed" }}
+              disabled={!isLoggedIn}
+            >
+              Exit
+            </button>
+          </li>
+        </ul>
+      );
+    } else {
+      // Render sub-level items vertically
+      return (
+        <>
+          {items.map((item, index) => (
+            <li key={`${parentId}-${level}-${index}`} className="dropdown-item">
+              {item.children ? (
+                <>
+                  <span className="dropdown-header">{item.label}</span>
+                  <ul className="dropdown-menu dropdown-submenu">
+                    {renderMenuItems(
+                      item.children,
+                      level + 1,
+                      `${parentId}-${level}-${index}`
+                    )}
+                  </ul>
+                </>
+              ) : (
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleNavigation(item.route || `/`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {item.label}
+                </button>
+              )}
+            </li>
+          ))}
+        </>
+      );
+    }
+  };
 
   return <nav>{renderMenuItems(items)}</nav>;
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLoginContext } from "../../Context/LoginContext";
 import { useNavigate } from "react-router-dom";
 import Menu from "./Menu";
@@ -33,7 +33,6 @@ import "./Menu.css";
 
 const MenuLayout = () => {
   const { isLoggedIn, setIsLoggedIn } = useLoginContext();
-  // const [selectedSubMenu, setSelectedSubMenu] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -42,18 +41,10 @@ const MenuLayout = () => {
     if (isLoggedIn) {
       setIsLoggedIn(false);
       navigate("/"); // Redirect to home on sign out
-      // alert('Signed out successfully')
     } else {
       navigate("/login"); // Redirect to login on sign in
     }
   };
-
-  // const subMenu: string[] = ["Students", "Teachers", "Subjects"];
-  // const handleSubMenuClick = (item: string) => {
-  //   if (isLoggedIn) {
-  //     navigate('/view/${item}');
-  //   }
-  // };
 
   // Show exit confirmation modal if user attempts to exit while logged in
   const handleExit = () => {
@@ -67,7 +58,7 @@ const MenuLayout = () => {
   };
 
   return (
-    <div className="container w-m-50">
+    <div className="container-fluid w-m-75">
       {/* Modal */}
       {showModal && (
         <>
@@ -96,10 +87,7 @@ const MenuLayout = () => {
               left: "50%",
               transform: "translate(-50%, -50%)",
               zIndex: 1050,
-              // backgroundColor: "#fff",
-              // borderRadius: "5px",
               width: "400px",
-              // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
             }}
           >
             <div className="modal-content">
@@ -132,27 +120,20 @@ const MenuLayout = () => {
           </div>
         </>
       )}
-      <div className="container w-50 mt-5">
+      <div className="container w-75 mt-5">
         <h3>Main Menu</h3>
         <ul className="list-group">
           <li className={'list-group-item ${isLoggedIn ? "" : "disabled"}'}>
-            <p className="m-0">File</p>
-            {isLoggedIn && (
-              <ul className="list-group">
-                <li className="list-group-item">
-                  <Menu items={menuData} />
-                </li>
-                <li className="list-group-item border-0">
-                  <button
-                    className="border-0 bg-transparent"
-                    onClick={handleExit}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Exit
-                  </button>
-                </li>
-              </ul>
-            )}
+            {/* <p className="m-0">File</p> */}
+            <ul className="list-group">
+              <li className="list-group-item">
+                <Menu
+                  items={menuData}
+                  onExitClick={handleExit}
+                  isLoggedIn={isLoggedIn}
+                />
+              </li>
+            </ul>
           </li>
 
           {/* Sign In/Sign Out Button */}
